@@ -12,6 +12,7 @@
 unsigned long long crash_recovery_pos=0;  //used to restart an aborted session at the last compleated popped pre-terminal value
 std::string structures_file;
 long long cur_guesses = 0;
+ofstream fout;
 //----Eventually want to build in a way to save progress or check status----------//
 void sig_alrm(int signo)
 {
@@ -66,6 +67,7 @@ int main(int argc, char *argv[]) {
   std::string grammar_dir = "grammar";
   std::string digits_dir = "digits";
   std::string symbol_dir = "special";
+  std::string guesses_file = "";
 //---------Parse the command line------------------------//
 
   //--Initilize the command line variables -- //
@@ -176,17 +178,30 @@ int main(int argc, char *argv[]) {
             help();
             return 1;
         }
-    } else {
+    } else if (commandLineInput.find("--guesses-file") == 0) {
+        i += 1;
+        if (i < argc) {
+            guesses_file = argv[i];
+        } else {
+            help();
+            return 1;
+        }
+    }
+    else {
       cout << "\nSorry, unknown command line option entered\n";
       help();
       return 0;
     }
   }
-  if (model_dir.size() == 0 || maxGuesses == 0) {
+  if (model_dir.size() == 0 || maxGuesses == 0 || guesses_file.size() == 0) {
     help();
     return 1;
   }
-
+  fout.open(guesses_file.c_str());
+  if (!fout.is_open()) {
+    std::cerr << "cannot open " << guesses_file << std::endl;
+    return 1;
+  }
   #ifdef _WIN32
   structures_file = model_dir + "\\" + grammar_dir + "\\" + "structures.txt";
   #else
@@ -230,7 +245,8 @@ int main(int argc, char *argv[]) {
     return 0;
   }
   
-   
+  fout.flush();
+  fout.close();
 
 //  while (!pqueue.empty()) {
 //    pqReplacementStruct temp;
@@ -252,6 +268,7 @@ void help() {
   cout << "./pcfg_manager <options>\n";
   cout << "\tOptions:\n";
   std::cout << "\t--model <model directory>\t<REQUIRED>: The trained model path\n";
+  std::cout << "\t--guesses-file <guesses file>\t<REQUIRED>: guesses generated will be put here\n";
   std::cout << "\t--guess-number <guess number>\t<REQUIRED>: the guess number\n";
   std::cout << "\t--grammar <grammar folder>\t<OPTIONAL>: grammar directory name under model path\n";
   std::cout << "\t--digits <digits folder>\t<OPTIONAL>: digits directory name under model path\n";
@@ -652,7 +669,7 @@ int createTerminal(pqReplacementType *curQueueItem,bool isLimit,long long  *maxG
     if (workingSection==curQueueItem->replacement.size()-1) {
 
       cur_guesses += 1;
-      cout << *curOutput << endl;
+      fout << *curOutput << endl;
       if (cur_guesses >= *maxGuesses) {
           std::exit(0);
       }
