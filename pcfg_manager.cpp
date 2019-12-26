@@ -8,7 +8,7 @@
 //
 
 #include "pcfg_manager.h"
-
+#include <ctime>
 unsigned long long crash_recovery_pos=0;  //used to restart an aborted session at the last compleated popped pre-terminal value
 std::string structures_file;
 long long cur_guesses = 0;
@@ -43,7 +43,7 @@ bool processDic(string *inputDicFileName,bool *inputDicExists, double *inputDicP
 bool processProbFromFile(ntContainerType **numWords,const char *fileType);  //processes the number probabilities
 short findSize(string input);  //used to find the length of a possible non-ascii string, used because MACOSX had problems with wstring
 
-
+clock_t start_time, end_time;
 
 
 int main(int argc, char *argv[]) {
@@ -239,7 +239,7 @@ int main(int argc, char *argv[]) {
     cout << "\nError, could not open structure file from the training set\n";
     return 0;
   }
-
+  start_time = clock();
   if (generateGuesses(&pqueue,isLimit,maxGuesses)==false) {
     cout << "\nError generating guesses\n";
     return 0;
@@ -671,6 +671,8 @@ int createTerminal(pqReplacementType *curQueueItem,bool isLimit,long long  *maxG
       cur_guesses += 1;
       fout << *curOutput << endl;
       if (cur_guesses >= *maxGuesses) {
+          end_time = clock();
+          std::cout << "The speed is: " << cur_guesses / ((double)(end_time - start_time) / CLOCKS_PER_SEC)  << std::endl;
           std::exit(0);
       }
     }
