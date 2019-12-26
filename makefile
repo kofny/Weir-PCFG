@@ -1,6 +1,6 @@
 CC=g++
 XFLAG =-Wall -ansi -pedantic
-CFLAG = -no-pie
+CFLAG = -O3 -no-pie
 main: pcfg_manager checkPasswords clean-o
 
 
