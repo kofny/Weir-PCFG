@@ -669,10 +669,10 @@ int createTerminal(pqReplacementType *curQueueItem,bool isLimit,long long  *maxG
     if (workingSection==curQueueItem->replacement.size()-1) {
 
       cur_guesses += 1;
-      fout << *curOutput << endl;
+      fout << *curOutput << '\n';
       if (cur_guesses >= *maxGuesses) {
           end_time = clock();
-          std::cout << "The speed is: " << cur_guesses / ((double)(end_time - start_time) / CLOCKS_PER_SEC)  << std::endl;
+          std::cout << "The speed is: " << std::fixed << cur_guesses / ((double)(end_time - start_time) / CLOCKS_PER_SEC)  << std::endl;
           std::exit(0);
       }
     }
