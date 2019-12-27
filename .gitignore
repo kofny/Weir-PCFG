@@ -1,3 +1,7 @@
-checkPasswords
+cmake-build-debug
 pcfg_manager
 venv
+.idea
+*.o
+*.a
+/*.py

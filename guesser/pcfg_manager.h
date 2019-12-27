@@ -13,12 +13,12 @@
 
 #include <sys/types.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <signal.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+#include <csignal>
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -35,33 +35,33 @@ using namespace std;
 ///////////////////////////////////////////
 //Used for initially parsing the dictionary words
 typedef struct mainDicHolderStruct {
-  string word;
-  int category;
-  double probability;
-  short word_size;
-}mainDicHolderType;
+    string word;
+    int category;
+    double probability;
+    short word_size;
+} mainDicHolderType;
 
 
 ///////////////////////////////////////////
 //Non-Terminal Container Struct
 //Holds all the base information used for non-terminal to terminal replacements
 typedef struct ntContainerStruct {
-  list <string> word;           //the replacement value, can be a dictionary word, a
-  double probability;    //the probability of this group
-  bool replaceRule;            //if this is a replacement rule and not a final terminal
-  ntContainerStruct *next;        //The next highest probable replacement for this type
-  char type; //used for debugging, can delete later
-  int typeSize;  //used for debugging, can delete later
-}ntContainerType;
+    list<string> word;           //the replacement value, can be a dictionary word, a
+    double probability;    //the probability of this group
+//  bool replaceRule;            //if this is a replacement rule and not a final terminal
+    ntContainerStruct *next;        //The next highest probable replacement for this type
+//  char type; //used for debugging, can delete later
+//  int typeSize;  //used for debugging, can delete later
+} ntContainerType;
 
 //////////////////////////////////////////
 //PriorityQueue Replacement Type
 //Basically a pointer
 typedef struct pqReplacementStruct {
-  deque <ntContainerStruct *> replacement;
-  double probability;
-  double base_probability;  //the probability of the base structure
-  int pivotPoint;
-}pqReplacementType;
+    deque<ntContainerStruct *> replacement;
+    double probability;
+    double base_probability;  //the probability of the base structure
+    int pivotPoint;
+} pqReplacementType;
 #endif
 
